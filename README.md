@@ -1,6 +1,64 @@
-**RudimentaryChatBot - Python**
+# MyChat
 
-In the "requirements.txt" file, the package module requirements to run both chatbots and listed and the specific types and names are available. When downloaded and used in tandem with either chatbot program, you can see the ChatBots come to life.
+A clean, fast chatbot web app built with **Flask** and an open-source LLM from Hugging Face. It handles a wide range of everyday tasks: answering questions, writing and editing, summarizing, brainstorming, explaining concepts, and basic coding help.
 
-1) chatbot.py is a simpler option that works on an older facebook Seq2Seq model. It's capabilities are limited; however, basic conversation and discussion are possible.
-2) chatbot_llm.py is a more complex ChatBot that works using an integrated LLM model that has multiple diverse capabilities and the capability to speak about and help with multiple different unrelated tasks. However, it's strong points are in grammar, code syntax, text generation, and problem-solving.
+## Features
+
+- Flask backend serving a custom chat interface (light and dark themes)
+- Uses `Qwen/Qwen2.5-0.5B-Instruct` by default: small, free, Apache-2.0, runs on CPU
+- Conversation memory (recent context is sent with each message)
+- Typing indicator, code-block formatting, suggestion chips, clear-chat button
+- Docker support
+
+## Project structure
+
+```
+LLM_ChatBotAI/
+├── app.py                 # Flask app + model code
+├── requirements.txt
+├── Dockerfile
+├── .gitignore
+├── templates/
+│   └── index.html
+└── static/
+    ├── css/style.css
+    ├── js/script.js
+    └── img/               # logo, avatars, favicon
+```
+
+## Run locally
+
+```bash
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+```
+
+Open http://localhost:5000. The first start downloads the model (about 1 GB) and may take a minute.
+
+## Choose a different model
+
+Set the `MODEL_NAME` environment variable to any chat/instruct model on Hugging Face:
+
+```bash
+MODEL_NAME="Qwen/Qwen2.5-1.5B-Instruct" python app.py   # better answers, needs more RAM
+```
+
+Change the port the same way: `PORT=8080 python app.py`.
+
+## Run with Docker
+
+```bash
+docker build -t mychat .
+docker run -p 5000:5000 mychat
+```
+
+## API
+
+`POST /chatbot` with JSON `{"messages": [{"role": "user", "content": "Hello"}]}` returns `{"response": "..."}`.
+`GET /health` returns the loaded model and device.
+
+## License
+
+MIT
